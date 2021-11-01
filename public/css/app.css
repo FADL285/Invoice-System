@@ -10962,3 +10962,7 @@ a.text-dark:focus {
   }
 }
 
+.g-2 {
+  gap: 0.5rem;
+}
+
