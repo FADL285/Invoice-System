@@ -9,6 +9,7 @@
 
                     <div class="card-body">
                         <p>Index Page</p>
+                        <p>locale: {{ config('app.locale') }}</p>
                     </div>
                 </div>
             </div>

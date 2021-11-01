@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GeneralController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('invoice', 'InvoiceController');
 Route::redirect('/', \route('invoice.index'));
-
+Route::get('lang/{locale}', [GeneralController::class, 'changeLang'])->name('change_lang');
 //Auth::routes();
 
 //Route::get('/home', [HomeController::class,'index'])->name('home');
