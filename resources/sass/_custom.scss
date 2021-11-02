@@ -3,3 +3,15 @@
 .g-2 {
     gap: 0.5rem;
 }
+
+.mw-10 {
+    min-width: calc(100rem / 16);
+}
+
+.mw-13 {
+    min-width: calc(130rem / 16);
+}
+
+.w-10 {
+    width: calc(100rem / 16);
+}

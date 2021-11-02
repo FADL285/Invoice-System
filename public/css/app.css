@@ -10966,3 +10966,15 @@ a.text-dark:focus {
   gap: 0.5rem;
 }
 
+.mw-10 {
+  min-width: 6.25rem;
+}
+
+.mw-13 {
+  min-width: 8.125rem;
+}
+
+.w-10 {
+  width: 6.25rem;
+}
+
