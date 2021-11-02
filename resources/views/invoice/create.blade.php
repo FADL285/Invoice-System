@@ -46,41 +46,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>#</td>
-                                        <td>
-                                            <x-form.input name="product_name[]" class="product_name"/>
-                                        </td>
-                                        <td>
-                                            <label>
-                                                <select name="unit[]" id="unit" class="unit custom-select mw-13">
-                                                    <option disabled selected>Choose...</option>
-                                                    <option value="piece">piece</option>
-                                                    <option value="g">gram</option>
-                                                    <option value="kg">kilo_gram</option>
-                                                </select>
-                                            </label>
-                                            <x-form.error name="unit"/>
-                                        </td>
-                                        <td>
-                                            <x-form.input type="number" name="quantity[]" class="quantity" step="1"
-                                                          min="1"/>
-                                        </td>
-                                        <td>
-                                            <x-form.input type="number" name="unit_price[]" class="unit_price"
-                                                          step="0.01" min="0"/>
-                                        </td>
-                                        <td>
-                                            <x-form.input type="number" name="row_sub_total[]" class="row_sub_total"
-                                                          value="0.00" readonly/>
-                                        </td>
-                                    </tr>
+                                        <x-product.row order="0" :isSecondary="false"/>
                                     </tbody>
 
                                     <tfoot>
                                     <tr>
                                         <td colspan="6">
-                                            <x-form.button class="btn-add">
+                                            <x-form.button class="btn-add" id="add-product">
                                                 Add Another Product
                                             </x-form.button>
                                         </td>
@@ -105,7 +77,7 @@
                                                 </select>
                                                 <div class="input-group-append">
                                                     <x-form.input type="number" name="discount_value"
-                                                                  class="discount_value w-10" step="0.01"
+                                                                  class="discount_value w-10" step="1"
                                                                   value="0.00" min="0"/>
                                                 </div>
                                             </div>
@@ -187,20 +159,34 @@
                 return sum;
             }
 
+            function summary() {
+                $('#sub_total').val(sumTotal('.row_sub_total'))
+                $('#vat_value').val(calcVat());
+                $('#total_due').val(sumDueTotal());
+            }
+
             $('#invoice_details').on('keyup blur', '.quantity, .unit_price, #discount_value, #shipping', function () {
                 const row = $(this).closest('tr');
                 const quantity = +row.find('.quantity').val();
                 const unitPrice = +row.find('.unit_price').val();
                 row.find('.row_sub_total').val((quantity * unitPrice).toFixed(2));
-                $('#sub_total').val(sumTotal('.row_sub_total'))
-                $('#vat_value').val(calcVat());
-                $('#total_due').val(sumDueTotal());
+                summary()
             })
 
             $('#invoice_details #discount_type').on('change', function () {
                 $('#vat_value').val(calcVat());
                 $('#total_due').val(sumDueTotal());
             })
+
+            $('#invoice_details #add-product').on('click', function (){
+                $('#invoice_details').find('tbody').append(`<x-product.row order="5"/>`);
+            })
+
+            $('#invoice_details').on('click', '.delete_product', function () {
+                $(this).parent().parent().remove();
+                summary();
+            })
+
         })
     </script>
 @endsection
