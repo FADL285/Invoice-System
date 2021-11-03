@@ -37270,6 +37270,8 @@ module.exports = function(module) {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+__webpack_require__(/*! ./custom */ "./resources/js/custom.js");
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -37314,6 +37316,80 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/custom.js":
+/*!********************************!*\
+  !*** ./resources/js/custom.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function sumTotal(selector) {
+  var sum = 0;
+  $(selector).each(function () {
+    sum += +$(this).val();
+  });
+  return sum.toFixed(2);
+}
+
+function calcDiscount() {
+  var sub_totalVal = +$('.sub_total').val();
+  var discountType = $('.discount_type').val();
+  var discountVal = +$('.discount_value').val();
+  var netDiscountVal = 0;
+
+  if (discountVal !== 0) {
+    netDiscountVal = discountType === 'percentage' ? sub_totalVal * (discountVal / 100) : discountVal;
+  }
+
+  return netDiscountVal;
+}
+
+function calcVat() {
+  var sub_totalVal = +$('.sub_total').val();
+  return ((sub_totalVal - calcDiscount()) * 0.05).toFixed(2);
+}
+
+function sumDueTotal() {
+  var sum = 0;
+  sum += +$('.sub_total').val();
+  sum -= calcDiscount();
+  sum += +$('#vat_value').val();
+  sum += +$('#shipping').val();
+  return sum;
+}
+
+function summary() {
+  $('#sub_total').val(sumTotal('.row_sub_total'));
+  $('#vat_value').val(calcVat());
+  $('#total_due').val(sumDueTotal());
+}
+
+addProduct = function addProduct(product) {
+  $('#invoice_details #add-product').on('click', function () {
+    $('#invoice_details').find('tbody').append(product);
+  });
+};
+
+$(function () {
+  $('#invoice_details').on('keyup blur', '.quantity, .unit_price, #discount_value, #shipping', function () {
+    var row = $(this).closest('tr');
+    var quantity = +row.find('.quantity').val();
+    var unitPrice = +row.find('.unit_price').val();
+    row.find('.row_sub_total').val((quantity * unitPrice).toFixed(2));
+    summary();
+  });
+  $('#invoice_details #discount_type').on('change', function () {
+    $('#vat_value').val(calcVat());
+    $('#total_due').val(sumDueTotal());
+  });
+  $('#invoice_details').on('click', '.delete_product', function () {
+    $(this).parent().parent().remove();
+    summary();
+  });
+});
 
 /***/ }),
 
